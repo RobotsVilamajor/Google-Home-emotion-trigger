@@ -28,13 +28,13 @@ config.read("config.cfg")
 config = config["DATA"]
 
 # Get config values
-EMOTIONS = 	ast.literal_eval(config["emotions"])
-COLORS = 	ast.literal_eval(config["colors"])
-WEIGHTS = 	ast.literal_eval(config["weights"])
+EMOTIONS =	ast.literal_eval(config["emotions"])
+COLORS =	ast.literal_eval(config["colors"])
+WEIGHTS =	ast.literal_eval(config["weights"])
 MUSIC =		[glob.glob(f"Music\\{x}\\*.mp3") for x in range(6)]
-HOST = 		config["host"]
-play_song = config.getboolean("play_song")
-path = 		config["model"]
+HOST =		config["host"]
+play_song =	config.getboolean("play_song")
+path =		config["model"]
 
 # Load keras model
 json_file = open(f"{path}.json")
@@ -61,7 +61,7 @@ while run:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			run = False
-			exit()
+			pygame.quit()
 	
 	# Read webcam image
 	opened, img = cam.read()
@@ -112,8 +112,11 @@ while run:
 			# Get the highest count emotion
 			result = np.array(counts).argmax()
 			
+			# Get the emotion
+			emotion = EMOTIONS[result]
+			
 			# Calculate emotion percent
-			percent = counts[result] / sum(counts)
+			percent = int((counts[result] / sum(counts)) * 100)
 			
 			print(play_song)
 			
@@ -130,7 +133,8 @@ while run:
 				name = os.path.splitext(os.path.basename(music))[0]
 				
 				# Make google home talk
-				device.say(f"Detecto un {int(percent * 100)}% de {EMOTIONS[result]}. Voy a poner la canción {name}", "es")
+				sentence = f"Detecto un {percent}%% de {emotion}. Voy a poner la canción {name}"
+				device.say(sentence, "es")
 				
 				# Wait for google home to finish the previous sentence
 				time.sleep(10)
@@ -146,7 +150,8 @@ while run:
 			else:
 				
 				# Make google home talk
-				device.say(f"Detecto un {int(percent * 100)}% de {EMOTIONS[result]}", "es")
+				sentence = f"Detecto un {percent}%% de {emotion}"
+				device.say(sentence, "es")
 				
 			# Clear stored emotions
 			history.clear()
