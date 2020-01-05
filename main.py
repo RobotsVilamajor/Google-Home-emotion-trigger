@@ -133,7 +133,8 @@ while run:
 				name = os.path.splitext(os.path.basename(music))[0]
 				
 				# Make google home talk
-				sentence = f"Detecto un {percent}%% de {emotion}. Voy a poner la canción {name}"
+				sentence = config["sentence_song"].format(percent=percent, emotion=emotion, song=name)
+				print(sentence)
 				device.say(sentence, "es")
 				
 				# Wait for google home to finish the previous sentence
@@ -150,7 +151,8 @@ while run:
 			else:
 				
 				# Make google home talk
-				sentence = f"Detecto un {percent}%% de {emotion}"
+				sentence = config["sentence_no_song"].format(percent=percent, emotion=emotion)
+				print(sentence)
 				device.say(sentence, "es")
 				
 			# Clear stored emotions
