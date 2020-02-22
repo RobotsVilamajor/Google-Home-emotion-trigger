@@ -10,6 +10,14 @@ import time
 import configparser
 import ast
 import random
+import argparse
+
+argpar = argparse.ArgumentParser()
+argpar.add_argument('song', nargs='?', default=0, type=int)
+
+args = argpar.parse_args()
+
+print(args.song)
 
 # Open webcam
 cam = cv2.VideoCapture(0)
@@ -33,8 +41,10 @@ COLORS =	ast.literal_eval(config["colors"])
 WEIGHTS =	ast.literal_eval(config["weights"])
 MUSIC =		[glob.glob(f"Music\\{x}\\*.mp3") for x in range(6)]
 HOST =		config["host"]
-play_song =	config.getboolean("play_song")
+play_song =	args.song != 0 #config.getboolean("play_song")
 path =		config["model"]
+
+print(play_song)
 
 # Load keras model
 json_file = open(f"{path}.json")
